@@ -14,22 +14,27 @@ class HouseSpider(scrapy.Spider):
                   'https://www.anjuke.com/fangjia/nanjing2017/',
                   'https://www.anjuke.com/fangjia/nanjing2016/',
                   'https://www.anjuke.com/fangjia/nanjing2015/',
-                  'https://www.anjuke.com/fangjia/nanjing2014/',
+                  "https://www.anjuke.com/fangjia/nanjing2014/",
                   'https://www.anjuke.com/fangjia/nanjing2013/',
                   'https://www.anjuke.com/fangjia/nanjing2012/',
                   'https://www.anjuke.com/fangjia/nanjing2019/',
                   'https://www.anjuke.com/fangjia/nanjing2010/']
 
     def parse(self, response):
-        # 处理首页
-        self.handle_response(response)
         links = response.xpath("//span[@class=\"elem-l\"]/a/@href").extract()
         for link in links:
             # print("一级节点---" + link)
+            if "nanjing" in str(link):
+                yield scrapy.Request(link, callback=self.handle_response)
             yield scrapy.Request(link, callback=self.parse_next)
+
+        # 首节点
+        for start_url in self.start_urls:
+            yield scrapy.Request(start_url, callback=self.handle_response)
         pass
 
-    def handle_response(self, response):
+    @staticmethod
+    def handle_response(response):
         region = response.xpath("//span[@class=\"elem-l\"]/span[@class=\"selected-item\"]/text()")
         area = response.xpath("//h3[@class=\"pagemod-tit\"]/text()").extract()[0]
         area = area.split("房价")[0]
@@ -56,7 +61,6 @@ class HouseSpider(scrapy.Spider):
         pass
 
     def parse_next(self, response):
-        self.handle_response(response)
         links = response.xpath("//div[@class=\"sub-items\"]//a/@href").extract()
         for link in links:
             # print("二级节点---" + link)
