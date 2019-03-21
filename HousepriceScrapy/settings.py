@@ -22,7 +22,7 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
 
-DOWNLOAD_DELAY = 5
+DOWNLOAD_DELAY = 3
 
 
 COOKIES_ENABLED = False

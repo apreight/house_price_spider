@@ -26,7 +26,7 @@ class HouseSpider(scrapy.Spider):
             # print("一级节点---" + link)
             if "nanjing" in str(link):
                 yield scrapy.Request(link, callback=self.handle_response)
-            yield scrapy.Request(link, callback=self.parse_next)
+                yield scrapy.Request(link, callback=self.parse_next)
 
         # 首节点
         for start_url in self.start_urls:
