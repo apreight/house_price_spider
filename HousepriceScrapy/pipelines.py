@@ -8,7 +8,7 @@ import pymongo
 
 
 class HousepricescrapyPipeline(object):
-    collection_name = 'price'  # 数据库中 collection 的命名
+    collection_name = 'price_latest'  # 数据库中 collection 的命名
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri

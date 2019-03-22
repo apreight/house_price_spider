@@ -21,16 +21,16 @@ class HouseSpider(scrapy.Spider):
                   'https://www.anjuke.com/fangjia/nanjing2010/']
 
     def parse(self, response):
-        links = response.xpath("//span[@class=\"elem-l\"]/a/@href").extract()
-        for link in links:
-            # print("一级节点---" + link)
-            if "nanjing" in str(link):
-                yield scrapy.Request(link, callback=self.handle_response)
-                yield scrapy.Request(link, callback=self.parse_next)
+        for link1 in response.xpath("//span[@class=\"elem-l\"]/a/@href").extract():
+            logging.debug("一级节点:[ "+link1+" ]")
+            if "nanjing" in str(link1):
+                yield scrapy.Request(link1, callback=self.handle_response, dont_filter=True)
+                yield scrapy.Request(link1, callback=self.parse_next, dont_filter=True)
 
         # 首节点
         for start_url in self.start_urls:
-            yield scrapy.Request(start_url, callback=self.handle_response)
+            logging.debug("首节点:[ " + start_url + " ]")
+            yield scrapy.Request(start_url, callback=self.handle_response, dont_filter=True)
         pass
 
     @staticmethod
@@ -60,9 +60,10 @@ class HouseSpider(scrapy.Spider):
             yield item
         pass
 
-    def parse_next(self, response):
+    @staticmethod
+    def parse_next(response):
         links = response.xpath("//div[@class=\"sub-items\"]//a/@href").extract()
         for link in links:
-            # print("二级节点---" + link)
-            yield scrapy.Request(link, callback=self.handle_response)
+            logging.debug("二级节点:[ " + link + " ]")
+            yield scrapy.Request(link, callback=HouseSpider.handle_response)
         pass
