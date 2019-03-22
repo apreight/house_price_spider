@@ -11,7 +11,11 @@ import scrapy
 class HousepricescrapyItem(scrapy.Item):
     region = scrapy.Field()
     area = scrapy.Field()
+    origin_url = scrapy.Field()
+    area_id = scrapy.Field()
     title = scrapy.Field()
     price = scrapy.Field()
     speed = scrapy.Field()
+    time_year = scrapy.Field()
+    time_mon = scrapy.Field()
     pass

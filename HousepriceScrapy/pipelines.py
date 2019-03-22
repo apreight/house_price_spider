@@ -5,10 +5,12 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import pymongo
+from bson import ObjectId
 
 
 class HousepricescrapyPipeline(object):
-    collection_name = 'price_latest'  # 数据库中 collection 的命名
+    price_collection_name = 'price_data'  # 数据库中 collection 的命名
+    address_collection_name = 'address'
 
     def __init__(self, mongo_uri, mongo_db):
         self.mongo_uri = mongo_uri
@@ -21,7 +23,7 @@ class HousepricescrapyPipeline(object):
             mongo_db=crawler.settings.get('MONGO_DATABASE')
         )
 
-    def open_spider(self,spider):
+    def open_spider(self, spider):
         self.client = pymongo.MongoClient(self.mongo_uri)
         self.db = self.client[self.mongo_db]
 
@@ -29,5 +31,19 @@ class HousepricescrapyPipeline(object):
         self.client.close()
 
     def process_item(self, item, spider):
-        self.db[self.collection_name].insert(dict(item))
+        addr = self.db[self.address_collection_name].find_one({"area": item["area"]})
+        if addr is None:
+            object_id = ObjectId(self.db[self.address_collection_name].insert({'area': item["area"],
+                                                                               'region': item["region"]}))
+        else:
+            object_id = addr['_id']
+        self.db[self.price_collection_name].insert({
+            'area_id': object_id,
+            'origin_url': item["origin_url"],
+            'title': item["title"],
+            'price': item["price"],
+            'speed': item["speed"],
+            'time_year': item["time_year"],
+            'time_mon': item["time_mon"]
+        })
         return item
