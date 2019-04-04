@@ -17,7 +17,7 @@ class HouseSpider(scrapy.Spider):
                   "https://www.anjuke.com/fangjia/nanjing2014/",
                   'https://www.anjuke.com/fangjia/nanjing2013/',
                   'https://www.anjuke.com/fangjia/nanjing2012/',
-                  'https://www.anjuke.com/fangjia/nanjing2019/',
+                  'https://www.anjuke.com/fangjia/nanjing2011/',
                   'https://www.anjuke.com/fangjia/nanjing2010/']
 
     def parse(self, response):
