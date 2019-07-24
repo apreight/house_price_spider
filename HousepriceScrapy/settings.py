@@ -27,5 +27,5 @@ DOWNLOAD_DELAY = 2.25
 
 COOKIES_ENABLED = False
 
-MONGO_URI = 'mongodb://admin:131415@47.101.174.230:27017'
+MONGO_URI = 'mongodb://[user]:[password]@[host]:[prot]'
 MONGO_DATABASE = 'house_price'  # 可以自定义MONGODB_DBNAME = 'house_price'
